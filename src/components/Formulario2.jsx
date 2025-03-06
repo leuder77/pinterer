@@ -8,6 +8,7 @@ import { auth } from "@/firebase/config"
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth"
 import Link from "next/link"
 import userStore from "@/store/userStore"
+import useToast from "@/hooks/useToast"
 
 export default function Formulario2() {
 
@@ -16,7 +17,9 @@ export default function Formulario2() {
     const [mensaje, setMensaje] = useState("")
     const [loading, setLoading] = useState(false)
 
-    const { loginUser, usuario } = userStore()
+    const { loginUser } = userStore()
+
+    const {exito} =useToast();
 
     const inicioSesion = async () => {
         if (!email || !contraseña) {
@@ -28,7 +31,7 @@ export default function Formulario2() {
             const respuesta = await signInWithEmailAndPassword(auth, email, contraseña)
             console.log(respuesta)
             loginUser(respuesta.user)
-            setMensaje("inicio de sesion exitoso.")
+            exito("Iniciaste sesion eitosamente")
             setEmail("")
             setContraseña("")
         } catch (error) {
@@ -47,6 +50,7 @@ export default function Formulario2() {
             const response = await signInWithPopup(auth, provider)
             //console.log(response)
             loginUser(response.user)
+            exito("iniciaste sesion exitosamente")
         } catch (error) {
             console.log(error)
         }
